@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   token: null,
-  userPets: [],
-  pets: [],
+  userPosts: [],
+  connections: [],
 };
 
 export const authSlice = createSlice({
@@ -19,24 +19,24 @@ export const authSlice = createSlice({
       state.user = null;
       state.token = null;
     },
-    setUserPets: (state, action) => {
+    setUserPosts: (state, action) => {
       if (state.user) {
-        state.user.userPets = action.payload.userPets;
+        state.user.userPosts = action.payload.userPosts;
       } else {
-        console.log("User friends non existent");
+        console.log("User posts non existent");
       }
     },
-    setPets: (state, action) => {
-      state.pets = action.payload.pets;
+    setConnections: (state, action) => {
+      state.connections = action.payload.connections;
     },
-    setPet: (state, action) => {
-      const updatedPets = state.pets.map((pet) => {
-        if (pet._id == action.payload._id) return action.payload.pet;
+    setPost: (state, action) => {
+      const updatedPosts = state.pets.map((post) => {
+        if (post._id == action.payload._id) return action.payload.post;
       });
     },
   },
 });
 
-export const { setLogin, setLogout, setUserPets, setPets, setPet } =
+export const { setLogin, setLogout, setConnections, setUserPosts, setPost } =
   authSlice.actions;
 export default authSlice.reducer;

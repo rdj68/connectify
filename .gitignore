@@ -7,7 +7,6 @@
 /client/.pnp.js
 /.pnp
 .pnp.js
-/server/.env
 # testing
 /client/coverage
 /server/coverage
@@ -27,3 +26,4 @@
 /client/npm-debug.log*
 /client/yarn-debug.log*
 /client/yarn-error.log*
+node_modules

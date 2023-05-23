@@ -10,14 +10,13 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
-import petsRoutes from "./routes/pets.js";
+import postRoutes from "./routes/posts.js";
+import { createPost } from "./controllers/posts.js";
 import { register } from "./controllers/auth.js";
-import { registerPet } from "./controllers/pets.js";
 import { verifyToken } from "./middleware/auth.js";
-import User from "./models/User.js";
-import Pet from "./models/Pets.js";
 
-import { users, pets } from "./data/index.js";
+import User from "./models/User.js";
+
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,12 +31,12 @@ app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30 mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-app.use("/asse", express.static(path.join(__dirname, "public/assets")));
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 //FILESTORAGE
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "Public/assets");
+    cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -46,12 +45,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //ROUTES WITH FILES
-app.post("auth/register", upload.single("picture"), register);
-app.post("/pets", verifyToken, upload.single("picture"), registerPet);
+app.post("/auth/register", upload.single("picture"), register);
+app.post("/posts", verifyToken, upload.single("picture"), createPost);
 //ROUTES
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
-app.use("/pets", petsRoutes);
+app.use("/posts", postRoutes);
 
 //MONGOOSE SETUP
 const PORT = process.env.PORT || 6001;

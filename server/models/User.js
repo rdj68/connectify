@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
+    userName: {
       type: String,
       required: true,
       min: 2,
@@ -20,17 +20,36 @@ const UserSchema = new mongoose.Schema(
       min: 2,
       max: 50,
     },
-    isSeller: {
-      type: Boolean,
+    bio: {
+      type: String,
       required: true,
     },
-    pets: {
+    fieldOfIntrest: {
       type: Array,
-      default: [],
+    },
+    isCompany: {
+      type: Boolean,
+      required: true,
     },
     picturePath: {
       type: String,
       default: "",
+    },
+    connections: {
+      type: Array,
+      default: [],
+    },
+    posts: {
+      type: Array,
+      default: [],
+    },
+    skills: {
+      type: Array,
+      default: [],
+    },
+    messages: {
+      type: Array,
+      default: [],
     },
     location: String,
     age: Number,
@@ -38,5 +57,5 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("UserConnectify", UserSchema);
 export default User;

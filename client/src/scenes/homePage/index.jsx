@@ -1,31 +1,40 @@
 import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Typography,
+  Avatar,
+  InputBase,
+  Paper,
+  Chip,
+  ThemeProvider,
+} from "@mui/material";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "scenes/navbar";
-import collab1 from "./collab1.jpg";
-import collab2 from "./collab2.jpg";
 import Footer from "scenes/footer";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import { Instagram } from "@mui/icons-material";
-import { FormControl, MenuItem, Select } from "@mui/material";
-import userEvent from "@testing-library/user-event";
-
-const socialMedia = [
-  {
-    name: "Instagram",
-    logo: Instagram,
-  },
-];
+import { createTheme, responsiveFontSizes } from "@mui/material";
 
 const HomePage = () => {
+  const [searchKey, setSearchKey] = useState("");
+  const [result, setResult] = useState([]);
+  var theme = createTheme();
+  theme = responsiveFontSizes(theme);
+
+  const search = async () => {
+    var result = await fetch(`http://localhost:3001/user/search`, {
+      method: "GET",
+      headers: { Search: searchKey },
+    });
+    result = await result.json();
+    setResult(result);
+  };
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Box
         sx={{
-          // bgcolor: "#85FFBD",
-          // backgroundImage: "linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%)",
           background: "#0f0c29",
           background:
             "-webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29)",
@@ -40,8 +49,8 @@ const HomePage = () => {
             display: "flex",
             width: "100%",
             justifyContent: "center",
-            mt: 5,
           }}
+          mt={10}
         >
           <Typography
             variant="h4"
@@ -49,7 +58,7 @@ const HomePage = () => {
               color: "#fff",
               fontFamily: "sans-serif",
               fontWeight: 500,
-              mt: 5,
+              display: "inline-flex",
             }}
           >
             Find Influencers from all over
@@ -60,9 +69,8 @@ const HomePage = () => {
               color: "#d32f2f",
               fontFamily: "sans-serif",
               fontWeight: 600,
-              mt: 5,
-              ml: 2,
             }}
+            ml={1}
           >
             India
           </Typography>
@@ -73,93 +81,125 @@ const HomePage = () => {
             width: "100%",
             justifyContent: "center",
             mt: 5,
+            mx: 1,
           }}
         >
-          <FormControl
-            variant="standard"
-            sx={{ bgcolor: "white" }}
-            value={userEvent}
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            columns={{ xs: 12 }}
           >
-            <Select
-              value={socialMedia[0].name}
-              sx={{
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3 rem",
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={socialMedia[0].name}>
-                <Typography>{socialMedia[0].name}</Typography>
-              </MenuItem>
-            </Select>
-          </FormControl>
+            <Grid item md={8}>
+              <Paper
+                component="form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  search();
+                }}
+                sx={{
+                  p: "2px 4px",
+                  display: "flex",
+                  alignItems: "center",
+                  width: 400,
+                  borderRadius: 5,
+                }}
+              >
+                <InputBase
+                  sx={{ ml: 1, flex: 1 }}
+                  placeholder="Search"
+                  inputProps={{ "aria-label": "search" }}
+                  onChange={(event) => setSearchKey(event.target.value)}
+                />
 
-          <CustomizedInputBase />
+                <Button onClick={search}>Search</Button>
+              </Paper>
+            </Grid>
+            <SearchResult data={result} />
+          </Grid>
         </Box>
-
-        {/* <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            mt: 5,
-          }}
-        >
-          <img src={collab1}></img>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            p: 3,
-            mt: 5,
-            justifyContent: "center",
-            gap: 20,
-          }}
-        >
-          <Typography variant="h2" color={"white"} fontFamily={"sans-serif"}>
-            Let's
-            <br />
-            Connect
-            <br />
-            And
-            <br />
-            Create
-          </Typography>
-          <img src={collab2}></img>
-        </Box> */}
       </Box>
       <Footer />
-    </>
+    </ThemeProvider>
   );
 };
 
-function CustomizedInputBase() {
-  return (
-    <Paper
-      component="form"
-      sx={{
-        p: "2px 4px",
-        display: "flex",
-        alignItems: "center",
-        width: 400,
-        borderRadius: 0,
-      }}
-    >
-      <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-        <SearchIcon />
-      </IconButton>
-      <InputBase
-        sx={{ ml: 1, flex: 1 }}
-        placeholder="Search"
-        inputProps={{ "aria-label": "search" }}
-      />
-    </Paper>
-  );
+function SearchResult({ data }) {
+  const navigate = useNavigate();
+  return data.map((user) => (
+    <Grid item md={4} mt={2}>
+      <Box
+        boxShadow={3}
+        borderRadius={2}
+        mx={2}
+        bgcolor="white"
+        overflow={"hidden"}
+      >
+        <Box>
+          <Box p={2}>
+            <Box display="inline-flex">
+              <Avatar
+                sx={{
+                  width: 100,
+                  height: 100,
+                }}
+                src={`http://localhost:3001/assets/${user.picturePath}`}
+              ></Avatar>
+              <Box mt={2}>
+                <Typography variant="h4" fontWeight={400}>
+                  {user.userName}
+                </Typography>
+                <Typography fontWeight={100}>
+                  {"   "}
+                  <LocationOnIcon fontSize="" />
+                  {user.location}
+                </Typography>
+              </Box>
+            </Box>
+            <Box mt={2}>
+              <Typography fontWeight={600}>Bio: </Typography>
+              <Typography>{user.bio}</Typography>
+
+              <Box fontWeight={600}>
+                Skills:{"  "}
+                {user.skills.map((skill, key) => (
+                  <Chip
+                    sx={{ mx: "15px" }}
+                    key={key}
+                    label={skill}
+                    variant="outlined"
+                  />
+                ))}
+              </Box>
+              <Box fontWeight={600}>
+                Intrest:{"  "}
+                {user.fieldOfIntrest.map((intrest, key) => (
+                  <Chip
+                    sx={{ mx: "15px" }}
+                    key={key}
+                    label={intrest}
+                    variant="outlined"
+                  />
+                ))}
+              </Box>
+              <Box mt={2}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={() => {
+                    const influencerId = user._id;
+                    navigate(`/user/${influencerId}`);
+                  }}
+                >
+                  Visit
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Grid>
+  ));
 }
+
 export default HomePage;

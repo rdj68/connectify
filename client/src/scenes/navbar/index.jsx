@@ -21,30 +21,28 @@ import {
   Select,
   styled,
 } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
-import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "state";
-import { useNavigate } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
 const drawerWidth = 240;
-const navItems = [
-  { name: "Home", url: "/" },
-  { name: "About", url: "/about" },
-  { name: "Contact Us", url: "/contactUs" },
-  { name: "Login", url: "/login" },
-  { name: "Sign Up", url: "/signup" },
-];
+
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
 function Navbar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const userName = "Yash Shinde";
+  const { userName, _id } = user;
+
+  const navItems = [
+    { name: "Home", url: "/home" },
+    { name: "About", url: "/about" },
+    { name: "Contact Us", url: "/contactUs" },
+    { name: "Profile", url: `/user/${_id}` },
+    { name: "Chats", url: `/user/${_id}/messages` },
+  ];
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -75,18 +73,7 @@ function Navbar(props) {
     <>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-        <AppBar
-          component="nav"
-          sx={{
-            background: "#0f0c29",
-            background:
-              "-webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29)",
-            background: "linear-gradient(to right, #24243e, #302b63, #0f0c29)",
-
-            pt: 2,
-          }}
-          elevation={0}
-        >
+        <AppBar component="nav" elevation={0}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -106,8 +93,11 @@ function Navbar(props) {
             >
               <Box sx={{ display: { xs: "none", sm: "flex" } }}>
                 <ConnectWithoutContactIcon fontSize="large" />
-                <Typography variant="h6" component="div" sx={{ mr: 30, mt: 1 }}>
-                  {" "}
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={{ mr: 30, mt: 1, fontWeight: 650 }}
+                >
                   Connectify
                 </Typography>
               </Box>
@@ -131,12 +121,13 @@ function Navbar(props) {
                     width: "150px",
                     borderRadius: "0.25rem",
                     p: "0.25rem 1rem",
+                    color: "#fff",
+                    fontWeight: 400,
                     "& .MuiSvgIcon-root": {
                       pr: "0.25rem",
                       width: "3 rem",
                       color: "#fff",
                     },
-                    color: "#fff",
                   }}
                   input={<InputBase />}
                 >

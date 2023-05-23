@@ -1,29 +1,50 @@
-import "./App.css";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import Navbar from "scenes/navbar";
+import { useSelector } from "react-redux";
 import HomePage from "scenes/homePage";
 import ProfilePage from "scenes/profilePage";
 import LoginPage from "scenes/loginPage";
-import SignUpPage from "scenes/signUpPage";
 import AboutPage from "scenes/aboutPage";
 import ContactUsPage from "scenes/contacUsPage";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
-import { Box } from "@mui/material";
+import MessagePage from "scenes/messagesPage/MessagesPage";
 
 function App() {
+  const isAuth = Boolean(useSelector((state) => state.token));
+  const isCompany = useSelector((state) => state.user && state.user.isCompany);
+  const _id = useSelector((state) => state.user && state.user._id);
   return (
     <>
       {/*Routes used for navigation from one page to other page*/}
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
+          <Route
+            path="/home"
+            element={
+              isAuth ? (
+                isCompany ? (
+                  <HomePage />
+                ) : (
+                  <Navigate to={`/user/${_id}`} />
+                )
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/contactus" element={<ContactUsPage />} />
-          <Route path="/user/:user:id" element={<ProfilePage />} />
+          <Route
+            path="/user/:id/messages"
+            element={isAuth ? <MessagePage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/user/:id/:connectionId/messages"
+            element={isAuth ? <MessagePage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/user/:id"
+            element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+          />
         </Routes>
       </BrowserRouter>
     </>

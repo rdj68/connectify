@@ -2,22 +2,20 @@ import * as React from "react";
 import { Grid } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { setConnections } from "state";
 import Navbar from "scenes/navbar";
-import ConnectionsDisplay from "scenes/widgets/Connections";
+import { useParams } from "react-router-dom";
 import ProfileDisplay from "scenes/widgets/Profile";
+import MessagesDisplay from "scenes/widgets/Messages";
+import ChatUsers from "scenes/widgets/ChatUsers";
 
-const ProfilePage = () => {
+const MessagePage = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
-
   const token = useSelector((state) => state.token);
-  const { _id } = useSelector((state) => state.user);
   const connections = useSelector((state) => state.connections);
-  const { id } = useParams();
+  const { id, connectionId } = useParams();
 
-  console.log(id);
   const getConnections = async () => {
     const response = await fetch(
       `http://localhost:3001/user/${id}/connections`,
@@ -51,11 +49,17 @@ const ProfilePage = () => {
     <>
       <Navbar />
       <Grid container mt={2} columnSpacing={2} justifyContent="center">
-        <ProfileDisplay user={user} _id={_id} token={token} columns={7} />
-        <ConnectionsDisplay connections={connections} id={id} />
+        <ChatUsers connections={connections} id={id} />
+        <MessagesDisplay
+          columns={7}
+          id={id}
+          token={token}
+          connectionId={connectionId}
+        />
+        <ProfileDisplay user={user} _id={id} columns={2} />
       </Grid>
     </>
   );
 };
 
-export default ProfilePage;
+export default MessagePage;
