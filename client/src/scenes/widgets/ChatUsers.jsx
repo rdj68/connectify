@@ -1,9 +1,10 @@
 import { Avatar, Box, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
+// The Chat widget takes two parameters 1. Connections of the user and 2. id of the user
+// The Chat widgets requests chat data from the server whenever the user clicks on the particular connection and displays user chats
 function ChatUsers(params) {
   const { connections, id } = params;
-
   return (
     <Grid item xs={12} md={2}>
       <Box boxShadow={3} borderRadius={2} minHeight="50vh" pt={2}>

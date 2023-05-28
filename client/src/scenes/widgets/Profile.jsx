@@ -3,6 +3,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+// This widget fetches the user data from the server and displays it on the web page
 function ProfileDisplay(props) {
   const { user, _id, token, columns } = props;
   const isCompany = user.isCompany;

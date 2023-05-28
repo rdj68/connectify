@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  TextField,
-  useMediaQuery,
-  Typography,
-  Switch,
-  Grid,
-  Link,
-} from "@mui/material";
+import { Box, TextField, Typography, Grid, Link } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -17,13 +9,14 @@ import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import bg from "./sideBG.webp";
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import * as Yup from "yup";
 
+// A blueprint for the user register data
 const registerSchema = Yup.object().shape({
   userName: Yup.string().required("required"),
   email: Yup.string().email("Invalid email").required("required"),
@@ -36,11 +29,14 @@ const registerSchema = Yup.object().shape({
 
   isCompany: Yup.bool().required("required"),
 });
+
+//A blueprint for user login data
 const loginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("required"),
   password: Yup.string().required("required"),
 });
 
+// intial values for register data of user are set
 const initialValuesRegister = {
   userName: "",
   email: "",
@@ -50,20 +46,26 @@ const initialValuesRegister = {
   bio: "",
   fieldOfIntrest: "",
   skills: "",
-  isCompany: true,
+  isCompany: false,
 };
+// intial values for login data of user are set
 const initialValueLogin = {
   email: "",
   password: "",
 };
 
+// The form function returns a form for register and login of the user
 const Form = () => {
+  //State variable to decide for login page or sign up page
   const [pageType, setPageType] = useState("login");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  //Register function is called when the user enters all the necessary fields and enters the register button, all the data fetched from the frontend
+  //is stored in a object and then a request to server is made to save the user details
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
@@ -85,6 +87,7 @@ const Form = () => {
       setPageType("login");
     }
   };
+  //Login function to send request to the server to authenticate the user from the database whether the user exists or not in the database
   const login = async (values, onSubmitProps) => {
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
@@ -105,15 +108,18 @@ const Form = () => {
     }
   };
 
+  // This function calls the login function if its a login page or registration function if its a registration page
   const handleFormSubmit = async (values, onSubmitProps) => {
     console.log("Form submit");
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
 
+  // The return statement returns the UI of the login and registration page, for automatic fetching of data formik npm package is used
   return (
     <Formik
       onSubmit={handleFormSubmit}
+      enableReinitialize
       initialValues={isLogin ? initialValueLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
     >
@@ -291,17 +297,24 @@ const Form = () => {
                             py={1}
                             border={"1px solid grey"}
                           >
-                            <Typography fontSize={20}>Company</Typography>
-                            <Switch
-                              label="isCompany"
+                            <Field
                               name="isCompany"
+                              type="checkbox"
                               checked={values.isCompany}
                               value={values.isCompany}
-                              onChange={() => {
-                                values.isCompany = !values.isCompany;
-                                console.log(values.isCompany);
-                              }}
+                              className="bx--toggle"
                             />
+                            <Typography sx={{ mr: 2 }} fontSize={18}>
+                              Company
+                            </Typography>
+                            <Field
+                              name="isCompany"
+                              type="checkbox"
+                              checked={!values.isCompany}
+                              value={!values.isCompany}
+                              className="bx--toggle"
+                            />
+                            <Typography fontSize={18}>Influencer</Typography>
                           </Box>
                         </Grid>
                         <Grid item xs={12} border={"2px solid "} mt={2} ml={2}>

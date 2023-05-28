@@ -29,6 +29,7 @@ const drawerWidth = 240;
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
+// The Navbar function return a fully functional navbar which is responsive that is on mobile screens it will have a navigation drawer sidebar
 function Navbar(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -36,6 +37,7 @@ function Navbar(props) {
   const user = useSelector((state) => state.user);
   const { userName, _id } = user;
 
+  // The navitems is a list containing all the nav elements that is web pages and their links
   const navItems = [
     { name: "Home", url: "/home" },
     { name: "About", url: "/about" },
@@ -48,6 +50,7 @@ function Navbar(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  // The drawer function is for sidebar on the mobile screens
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography fontFamily={"san serif"} variant="h6" sx={{ my: 2 }}>
@@ -69,6 +72,7 @@ function Navbar(props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  // The return statement contains UI part of the navbar containing all the links and user drop down menu
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -91,6 +95,7 @@ function Navbar(props) {
               }}
               flexGrow={1}
             >
+              {/* Website logo and name */}
               <Box sx={{ display: { xs: "none", sm: "flex" } }}>
                 <ConnectWithoutContactIcon fontSize="large" />
                 <Typography
@@ -102,6 +107,7 @@ function Navbar(props) {
                 </Typography>
               </Box>
 
+              {/* All the links are mapped by using the navItems list and map function  */}
               <Box sx={{ display: { xs: "none", sm: "flex" } }}>
                 {navItems.map((item) => (
                   <Button

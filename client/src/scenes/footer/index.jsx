@@ -6,6 +6,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 
 function Copyright() {
+  // A component to generate Copyright text for onnectify app with date
   return (
     <Typography variant="body2" color="text.secondary">
       {"Copyright © "}
@@ -19,6 +20,7 @@ function Copyright() {
 }
 
 export default function Footer() {
+  // A simple footer for the end of the page to display copyright of company
   return (
     <Box
       sx={{

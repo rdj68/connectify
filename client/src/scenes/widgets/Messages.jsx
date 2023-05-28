@@ -1,6 +1,7 @@
 import { Box, Grid, Paper, InputBase, Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 
+// The messages widget is used is used to display all the chats of user when requested by the chat user widget
 function MessagesDisplay(params) {
   const { columns, id, token, connectionId } = params;
   const [message, setMessage] = useState("");

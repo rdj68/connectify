@@ -17,11 +17,16 @@ import Footer from "scenes/footer";
 import { createTheme, responsiveFontSizes } from "@mui/material";
 
 const HomePage = () => {
+  // states to handle search and result. The searchkey is for when user enters data to be searched, and the result var is for storing the result
   const [searchKey, setSearchKey] = useState("");
   const [result, setResult] = useState([]);
+
+  // Theme is to customise elements as per requirement, here it is used for making the text responsive
   var theme = createTheme();
   theme = responsiveFontSizes(theme);
 
+  //The search function which is called when user clicks the search button, a request is sent to server to get the results from the database
+  // so for eg if food is searched then all food blogging related influencers are fetched
   const search = async () => {
     var result = await fetch(`http://localhost:3001/user/search`, {
       method: "GET",
@@ -31,6 +36,7 @@ const HomePage = () => {
     setResult(result);
   };
 
+  //the function return statement consists of all the UI code
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -43,6 +49,7 @@ const HomePage = () => {
           minHeight: "100vh",
         }}
       >
+        {/* Navbar component */}
         <Navbar />
         <Box
           sx={{
@@ -124,6 +131,8 @@ const HomePage = () => {
   );
 };
 
+// The search result function is for displaying all the results returned from the server end in form of blocks, clicking on these blocks leads
+//to profile of that influencer
 function SearchResult({ data }) {
   const navigate = useNavigate();
   return data.map((user) => (
