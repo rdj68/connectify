@@ -31,8 +31,14 @@ function App() {
             }
           />
           <Route path="/" element={<LoginPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contactus" element={<ContactUsPage />} />
+          <Route
+            path="/about"
+            element={isAuth ? <AboutPage /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/contactus"
+            element={isAuth ? <ContactUsPage /> : <Navigate to="/" />}
+          />
           <Route
             path="/user/:id/messages"
             element={isAuth ? <MessagePage /> : <Navigate to="/" />}
