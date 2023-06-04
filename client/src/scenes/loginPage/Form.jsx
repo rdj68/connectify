@@ -24,7 +24,7 @@ const registerSchema = Yup.object().shape({
   location: Yup.string().required("required"),
   picture: Yup.string().required("required"),
   bio: Yup.string().required("required"),
-  skills: Yup.string().required("required"),
+  skills: Yup.string(),
   fieldOfIntrest: Yup.string().required("required"),
 
   isCompany: Yup.bool().required("required"),
@@ -202,7 +202,6 @@ const Form = () => {
                             helperText={touched.userName && errors.userName}
                             autoComplete="given-name"
                             autoFocus
-                            required
                             fullWidth
                           />
                         </Grid>
@@ -218,7 +217,6 @@ const Form = () => {
                             }
                             helperText={touched.email && errors.email}
                             autoComplete="email"
-                            required
                             fullWidth
                           />
                         </Grid>
@@ -235,7 +233,6 @@ const Form = () => {
                               Boolean(errors.password)
                             }
                             helperText={touched.password && errors.password}
-                            required
                             fullWidth
                           />
                         </Grid>
@@ -251,7 +248,6 @@ const Form = () => {
                               Boolean(errors.location)
                             }
                             helperText={touched.location && errors.location}
-                            required
                             fullWidth
                           />
                         </Grid>
@@ -262,6 +258,7 @@ const Form = () => {
                             onChange={handleChange}
                             name="bio"
                             value={values.bio}
+                            error={Boolean(touched.bio) && Boolean(errors.bio)}
                             helperText={touched.bio && errors.bio}
                             fullWidth
                           />
@@ -273,6 +270,10 @@ const Form = () => {
                             onChange={handleChange}
                             name="fieldOfIntrest"
                             value={values.fieldOfIntrest}
+                            error={
+                              Boolean(touched.fieldOfIntrest) &&
+                              Boolean(errors.fieldOfIntrest)
+                            }
                             helperText={
                               touched.fieldOfIntrest && errors.fieldOfIntrest
                             }
@@ -310,9 +311,8 @@ const Form = () => {
                             <Field
                               name="isCompany"
                               type="checkbox"
-                              checked={!values.isCompany}
-                              value={!values.isCompany}
-                              className="bx--toggle"
+                              checked={values.isCompany === false}
+                              value={values.isCompany}
                             />
                             <Typography fontSize={18}>Influencer</Typography>
                           </Box>
@@ -346,17 +346,6 @@ const Form = () => {
                             )}
                           </Dropzone>
                         </Grid>
-                        <Grid item xs={12}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                value="allowExtraEmails"
-                                color="primary"
-                              />
-                            }
-                            label="I want to receive inspiration, marketing promotions and updates via email."
-                          />
-                        </Grid>
                       </Grid>
                       <Button
                         type="submit"
@@ -375,7 +364,7 @@ const Form = () => {
                             }}
                             variant="body2"
                           >
-                            Don't have an account? Sign in
+                            Have an account? Sign in
                           </Typography>
                         </Grid>
                       </Grid>

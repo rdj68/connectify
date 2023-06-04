@@ -63,9 +63,13 @@ export const addConnection = async (req, res) => {
 
 export const search = async (req, res) => {
   try {
-    const searchKey = req.header("Search");
+    const searchKey = req.header("Search").toLowerCase();
     const user = await User.find({
-      fieldOfIntrest: { $all: [searchKey] },
+      $or: [
+        { fieldOfIntrest: { $all: [searchKey] } },
+        { skills: { $all: [searchKey] } },
+        { userName: [searchKey] },
+      ],
       isCompany: false,
     });
 
